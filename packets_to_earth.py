@@ -117,8 +117,8 @@ if __name__=='__main__':
     print("Reading packets and generating kml...")
 
     # setup geo database and read packets. 
-    geoDataPath = '/home/jacob/Projects/NetworkAnalysis/GeoLite2-City_20200915/GeoLite2-City.mmdb'
-    fname = "gov-web-cap1.pcapng"
+    geoDataPath = '/home/jacob/Documents/GeoLite2-City_20210928/GeoLite2-City.mmdb'
+    fname = "gov-websites-cap1.pcapng"
     packets = rdpcap(fname)
 
     kmls=""
