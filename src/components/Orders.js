@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Link from '@mui/material/Link';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -52,28 +53,41 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
-export default function Orders() {
+export default function Packets() {
+
+
+  const [currentPackets, setCurrentPackets] = useState(0);
+
+  useEffect(() => {
+    fetch('/packets?packet_limit=5').then(res => res.json()).then(data => {
+      
+      const newPackets=data.packets
+      console.log(data.packets)
+      setCurrentPackets(newPackets);
+    });
+  }, []);
+
+
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
+      <Title>Packets</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
+            <TableCell>Internet Layer</TableCell>
+            <TableCell>Transport Layer</TableCell>
+            <TableCell>Source</TableCell>
+            <TableCell>Destination</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align="right">{`$${row.amount}`}</TableCell>
+          {currentPackets.map((row) => (
+            <TableRow key={row[0]}>
+              <TableCell>{row[1]}</TableCell>
+              <TableCell>{row[2]}</TableCell>
+              <TableCell>{row[3]}</TableCell>
+              <TableCell>{row[4]}</TableCell>
+              {/* <TableCell align="right">{`$${row.amount}`}</TableCell> */}
             </TableRow>
           ))}
         </TableBody>

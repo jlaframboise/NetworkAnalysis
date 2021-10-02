@@ -80,10 +80,19 @@ def get_version():
 # get packets from sql database
 @app.route('/packets', methods=['GET'])
 def get_packets():
+    limit = request.args.get('packet_limit')
     sql_connection = sql.connect(app.config['SQL_DB'])
     cursor=sql_connection.cursor()
-
-    cursor.execute("SELECT * FROM ip_packets")
+    if limit is None:
+        cursor.execute("""
+        SELECT * 
+        FROM ip_packets""")
+    else:
+        # use query parameters to avoid sql injection vulnerabilities
+        cursor.execute("""
+        SELECT * 
+        FROM ip_packets 
+        LIMIT ?""", [limit])
     records = cursor.fetchall()
     cursor.close()
     sql_connection.close()
