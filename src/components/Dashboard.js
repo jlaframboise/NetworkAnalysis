@@ -21,6 +21,7 @@ import { mainListItems, secondaryListItems } from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
+import PieChartComponent from './PieChart';
 
 function Copyright(props) {
   return (
@@ -171,6 +172,19 @@ function DashboardContent() {
                   }}
                 >
                   <Chart />
+                </Paper>
+              </Grid>
+              {/* PieChart */}
+              <Grid item xs={12} md={8} lg={9}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 240,
+                  }}
+                >
+                  <PieChartComponent />
                 </Paper>
               </Grid>
               {/* Recent Deposits */}

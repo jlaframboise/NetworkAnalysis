@@ -17,6 +17,51 @@ app.config['SQL_DB'] = 'database/sql_db.db'
 def get_current_time():
     return {'time': time.time()}
 
+@app.route('/count_packets')
+def get_packet_count():
+    sql_connection = sql.connect(app.config['SQL_DB'])
+    cursor=sql_connection.cursor()
+
+    cursor.execute("""
+    SELECT COUNT(*)
+    FROM ip_packets
+    """)
+    record = cursor.fetchone()
+    cursor.close()
+    sql_connection.close()
+    return {'packet_count': record[0]}
+
+@app.route('/transport_layer_freqs')
+def get_transport_layer_freqs():
+    sql_connection = sql.connect(app.config['SQL_DB'])
+    cursor=sql_connection.cursor()
+
+    cursor.execute("""
+    SELECT transport_layer, COUNT(*)
+    FROM ip_packets
+    GROUP BY transport_layer
+    """)
+    record = cursor.fetchall()
+    cursor.close()
+    sql_connection.close()
+    return {"transport_layer_dist": record}
+
+@app.route('/inet_layer_freqs')
+def get_inet_layer_freqs():
+    sql_connection = sql.connect(app.config['SQL_DB'])
+    cursor=sql_connection.cursor()
+
+    cursor.execute("""
+    SELECT inet_layer, COUNT(*)
+    FROM ip_packets
+    GROUP BY inet_layer
+    """)
+    record = cursor.fetchall()
+    cursor.close()
+    sql_connection.close()
+    return {"inet_layer_dist": record}
+
+
 # upload a file
 @app.route('/upload', methods=['POST'])
 def upload_packet():
