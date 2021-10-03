@@ -11,12 +11,20 @@ function preventDefault(event) {
 export default function Deposits() {
 
   const [packetCount, setPacketCount] = useState(0);
+  const [tableName, setTableName] = useState("getting table name...");
 
   useEffect(() => {
     fetch('/count_packets').then(res => res.json()).then(data => {
       
       setPacketCount(data.packet_count);
     });
+
+    fetch('/get_current_table_name').then(res => res.json()).then(data => {
+      
+      setTableName(data.table_name);
+    });
+
+
   }, []);
 
 
@@ -27,7 +35,7 @@ export default function Deposits() {
         {packetCount}
       </Typography>
       <Typography color="text.secondary" sx={{ flex: 1 }}>
-        in ip_packets table
+        in {tableName} table
       </Typography>
       <div>
         <Link color="primary" href="#" onClick={preventDefault}>
