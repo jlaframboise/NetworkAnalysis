@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { PieChart, Pie, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+import { Treemap, Pie, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
 import Title from './Title';
 import { useState, useEffect } from 'react';
 
@@ -30,13 +30,13 @@ const data01 = [
     }
   ];
 
-export default function PieChartComponent() {
+export default function TreeMapComponent() {
   const theme = useTheme();
-  const [transportLayerDist, setTransportLayerDist] = useState([]);
-  const [inetLayerDist, setInetLayerDist] = useState([]);
+  const [srcDist, setSrcDist] = useState([]);
+  const [destDist, setDestDist] = useState([]);
 
   useEffect(() => {
-    fetch('/transport_layer_freqs').then(res => res.json()).then(data => {
+    fetch('/src_freqs').then(res => res.json()).then(data => {
       const name_value_pairs = []
       data.dist.forEach(element => {
           name_value_pairs.push({
@@ -44,10 +44,10 @@ export default function PieChartComponent() {
               "value": element[1]
           })
       });
-      setTransportLayerDist(name_value_pairs);
+      setSrcDist(name_value_pairs);
     });
 
-    fetch('/inet_layer_freqs').then(res => res.json()).then(data => {
+    fetch('/dest_freqs').then(res => res.json()).then(data => {
         const name_value_pairs = []
         data.dist.forEach(element => {
             name_value_pairs.push({
@@ -55,19 +55,39 @@ export default function PieChartComponent() {
                 "value": element[1]
             })
         });
-        setInetLayerDist(name_value_pairs);
+        setDestDist(name_value_pairs);
       });
 
 
   }, []);
   return (
     <React.Fragment>
-      <Title>Today</Title>
+      <Title>Source</Title>
       <ResponsiveContainer>
-      <PieChart width={730} height={250}>
-        <Pie data={inetLayerDist} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={50} fill="#8884d8" />
-        <Pie data={transportLayerDist} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={80} fill="#82ca9d" label />
-      </PieChart>
+        <Treemap
+          width={730}
+          height={250}
+          data={srcDist}
+          dataKey="value"
+          aspectRatio={5}
+          stroke="#fff"
+          fill="#8884d8"
+        />
+        
+      </ResponsiveContainer>
+
+      <Title>Destination</Title>
+      <ResponsiveContainer>
+        <Treemap
+          width={730}
+          height={250}
+          data={destDist}
+          dataKey="value"
+          aspectRatio={5}
+          stroke="#fff"
+          fill="#8884d8"
+        />
+        
       </ResponsiveContainer>
     </React.Fragment>
   );

@@ -22,6 +22,7 @@ import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
 import PieChartComponent from './PieChart';
+import TreeMapComponent from './TreeMapChart';
 
 function Copyright(props) {
   return (
@@ -172,6 +173,19 @@ function DashboardContent() {
                   }}
                 >
                   <Chart />
+                </Paper>
+              </Grid>
+              {/* Treemap for source ip*/}
+              <Grid item xs={12} md={8} lg={9}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 240,
+                  }}
+                >
+                  <TreeMapComponent/>
                 </Paper>
               </Grid>
               {/* PieChart */}

@@ -44,7 +44,7 @@ def get_transport_layer_freqs():
     record = cursor.fetchall()
     cursor.close()
     sql_connection.close()
-    return {"transport_layer_dist": record}
+    return {"dist": record}
 
 @app.route('/inet_layer_freqs')
 def get_inet_layer_freqs():
@@ -59,7 +59,51 @@ def get_inet_layer_freqs():
     record = cursor.fetchall()
     cursor.close()
     sql_connection.close()
-    return {"inet_layer_dist": record}
+    return {"dist": record}
+
+@app.route('/src_freqs')
+def get_src_freqs():
+    sql_connection = sql.connect(app.config['SQL_DB'])
+    cursor=sql_connection.cursor()
+
+    cursor.execute("""
+    SELECT 
+        src, 
+        COUNT(src) AS `value_count`
+    FROM 
+        ip_packets
+    GROUP BY 
+        src
+    ORDER BY
+        `value_count` DESC
+    LIMIT 10
+    """)
+    record = cursor.fetchall()
+    cursor.close()
+    sql_connection.close()
+    return {"dist": record}
+
+@app.route('/dest_freqs')
+def get_dest_freqs():
+    sql_connection = sql.connect(app.config['SQL_DB'])
+    cursor=sql_connection.cursor()
+
+    cursor.execute("""
+    SELECT 
+        dest, 
+        COUNT(dest) AS `value_count`
+    FROM 
+        ip_packets
+    GROUP BY 
+        dest
+    ORDER BY
+        `value_count` DESC
+    LIMIT 10
+    """)
+    record = cursor.fetchall()
+    cursor.close()
+    sql_connection.close()
+    return {"dist": record}
 
 
 # upload a file
