@@ -13,7 +13,7 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
-export default function Packets() {
+export default function PacketTable() {
 
 
   const [currentPackets, setCurrentPackets] = useState([]);

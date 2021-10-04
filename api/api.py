@@ -149,17 +149,7 @@ def get_packets():
 
 
 
-# upload a file
-@app.route('/upload', methods=['POST'])
-def upload_packet():
-    uploaded_file = request.files['file']
-    filename = secure_filename(uploaded_file.filename)
-    if filename != '':
-        file_ext = os.path.splitext(filename)[1]
-        if file_ext not in app.config['UPLOAD_EXTENSIONS']:
-            abort(400)
-        uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-    return {'status': "successful file upload!"}
+
 
 
 @app.route('/create_table', methods=['POST'])
@@ -189,6 +179,17 @@ def create_table():
     sql_connection.close()
     return {'status':'table created I think. '}
 
+@app.route('/get_table_names', methods=['GET'])
+def get_table_names():
+    sql_connection = sql.connect(app.config['SQL_DB'])
+    cursor=sql_connection.cursor()
+
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    record = cursor.fetchall()
+    cursor.close()
+    sql_connection.close()
+    return {"table_names": record}
+
 @app.route('/get_current_table_name', methods=['GET'])
 def get_current_table_name():
     return {'table_name': app.config['CURRENT_TABLE']}
@@ -198,6 +199,19 @@ def set_table():
     new_table_name =  request.form['table_name']
     app.config['CURRENT_TABLE'] = santitize_table_name(new_table_name)
     return {'status':'table set I think. ', 'new_table_name':app.config['CURRENT_TABLE']}
+
+
+# upload a file
+@app.route('/upload', methods=['POST'])
+def upload_packet():
+    uploaded_file = request.files['file']
+    filename = secure_filename(uploaded_file.filename)
+    if filename != '':
+        file_ext = os.path.splitext(filename)[1]
+        if file_ext not in app.config['UPLOAD_EXTENSIONS']:
+            abort(400)
+        uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+    return {'status': "successful file upload!"}
 
 # upload a pcap file, sniff it, store it in sql db
 @app.route('/add_pcap', methods=['POST'])
@@ -221,8 +235,8 @@ def upload_pcap():
         # save to db
         sql_connection = sql.connect(app.config['SQL_DB'])
         cursor = sql_connection.cursor()
-        cursor.executemany("""INSERT INTO """+ app.config['CURRENT_TABLE'] + """ (inet_layer, transport_layer, src, dest)
-        VALUES (?, ?, ?, ?)""", parsed_packets)
+        cursor.executemany("""INSERT INTO """+ app.config['CURRENT_TABLE'] + """ (inet_layer, transport_layer, src, dest, src_country, src_city, src_lat, src_long, dest_country, dest_city, dest_lat, dest_long)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", parsed_packets)
         sql_connection.commit()
         cursor.close()
         sql_connection.close()

@@ -8,7 +8,7 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
-export default function Deposits() {
+export default function PacketsCount() {
 
   const [packetCount, setPacketCount] = useState(0);
   const [tableName, setTableName] = useState("getting table name...");
