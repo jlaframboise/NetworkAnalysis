@@ -109,6 +109,29 @@ def get_dest_freqs():
     return {"dist": record}
 
 
+@app.route('/country_freqs')
+def get_country_freqs():
+    sql_connection = sql.connect(app.config['SQL_DB'])
+    cursor=sql_connection.cursor()
+
+    cursor.execute("""
+    SELECT 
+        src_country, 
+        COUNT(src_country) AS `value_count`
+    FROM 
+        """+ app.config['CURRENT_TABLE'] + """
+    GROUP BY 
+        src_country
+    ORDER BY
+        `value_count` DESC
+    LIMIT 10
+    """)
+    record = cursor.fetchall()
+    cursor.close()
+    sql_connection.close()
+    return {"dist": record}
+
+
 
 
 

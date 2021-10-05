@@ -21,6 +21,7 @@ import PacketsCount from './PacketsCount';
 import Orders from './PacketTable';
 import PieChartComponent from './PieChart';
 import TreeMapComponent from './TreeMapChart';
+import MyBarChart from './MyBarChart';
 import MyDrawer from './MyDrawer';
 import { Button } from '@mui/material';
 import { useState, useEffect } from 'react';
@@ -139,6 +140,19 @@ function DashboardContent() {
                   }}
                 >
                   <TreeMapComponent updateDashboard={updateDashboard}/>
+                </Paper>
+              </Grid>
+              {/* bar chart for location*/}
+              <Grid item xs={12} md={8} lg={9}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 240,
+                  }}
+                >
+                  <MyBarChart updateDashboard={updateDashboard}/>
                 </Paper>
               </Grid>
               {/* PieChart */}

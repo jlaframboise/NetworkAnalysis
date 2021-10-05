@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Treemap, Pie, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+import { BarChart, Pie, Line, XAxis, YAxis, Label, ResponsiveContainer, CartesianGrid, Tooltip, Bar, Legend } from 'recharts';
 import Title from './Title';
 import { useState, useEffect } from 'react';
 
 
-export default function TreeMapComponent(props) {
+export default function MyBarChart(props) {
   const theme = useTheme();
-  const [srcDist, setSrcDist] = useState([]);
+  const [countryDist, setCountryDist] = useState([]);
   const [destDist, setDestDist] = useState([]);
 
   useEffect(() => {
-    fetch('/src_freqs').then(res => res.json()).then(data => {
+    fetch('/country_freqs').then(res => res.json()).then(data => {
       const name_value_pairs = []
       data.dist.forEach(element => {
           name_value_pairs.push({
@@ -19,7 +19,7 @@ export default function TreeMapComponent(props) {
               "value": element[1]
           })
       });
-      setSrcDist(name_value_pairs);
+      setCountryDist(name_value_pairs);
     });
 
     fetch('/dest_freqs').then(res => res.json()).then(data => {
@@ -38,31 +38,16 @@ export default function TreeMapComponent(props) {
 
   return (
     <React.Fragment>
-      <Title>Source</Title>
+      <Title>Top Countries</Title>
       <ResponsiveContainer>
-        <Treemap
-          width={730}
-          height={250}
-          data={srcDist}
-          dataKey="value"
-          aspectRatio={5}
-          stroke="#fff"
-          fill="#8884d8"
-        />
-        
-      </ResponsiveContainer>
-
-      <Title>Destination</Title>
-      <ResponsiveContainer>
-        <Treemap
-          width={730}
-          height={250}
-          data={destDist}
-          dataKey="value"
-          aspectRatio={5}
-          stroke="#fff"
-          fill="#8884d8"
-        />
+      <BarChart width={730} height={250} data={countryDist}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="value" name="Packet Count" fill="#8884d8" />
+      </BarChart>
         
       </ResponsiveContainer>
     </React.Fragment>
