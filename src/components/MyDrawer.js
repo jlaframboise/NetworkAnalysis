@@ -27,9 +27,11 @@ import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import SimpleDialog from './SimpleDialog';
 
 
-
+const emails = ['username@gmail.com', 'user02@gmail.com'];
 
 
 
@@ -61,19 +63,28 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   );
 
 
+  // function useForceUpdate(){
+  //   const [value, setValue] = useState(0);
+  //   return () => setValue(value => value+1);
+  // }
+
 export default function MyDrawer(props){
 
-    const [tableNames, setTableNames] = useState([]);
-
-    useEffect(() => {
-        fetch('/get_table_names').then(res => res.json()).then(data => {
-        const table_names_list = data.table_names.map((x)=>{return x[0]})
-        console.log(table_names_list)
-        setTableNames(table_names_list);
-        });
+  const [tableNames, setTableNames] = useState([]);
+  const [updateDrawer, setUpdateDrawer] = useState(0);
+  // const [selectedValue, setSelectedValue] = useState(emails[1]);
 
 
-    }, []);
+  useEffect(() => {
+      fetch('/get_table_names').then(res => res.json()).then(data => {
+      const table_names_list = data.table_names.map((x)=>{return x[0]})
+      console.log(table_names_list)
+      setTableNames(table_names_list);
+      });
+
+
+  }, [props.updateDashboard]);
+
 
     const mainListItems = (
         <div>
@@ -87,7 +98,7 @@ export default function MyDrawer(props){
             <ListItemIcon>
               <ShoppingCartIcon />
             </ListItemIcon>
-            <ListItemText primary="Orders" />
+            <ListItemText primary="Orders" onClick={e=>{props.setUpdateDashboard(props.updateDashboard+1)}} />
           </ListItem>
           <ListItem button>
             <ListItemIcon>
@@ -111,29 +122,6 @@ export default function MyDrawer(props){
         </div>
       );
 
-    const secondaryListItems = (
-        <div>
-          <ListSubheader inset>Saved reports</ListSubheader>
-          <ListItem button onClick={()=>{console.log("Wow you clicked current month!")}}>
-            <ListItemIcon>
-              <AssignmentIcon />
-            </ListItemIcon>
-            <ListItemText primary="Current month" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <AssignmentIcon />
-            </ListItemIcon>
-            <ListItemText primary="Last quarter" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <AssignmentIcon />
-            </ListItemIcon>
-            <ListItemText primary="Year-end sale" />
-          </ListItem>
-        </div>
-      );
 
 
 
@@ -150,6 +138,7 @@ export default function MyDrawer(props){
                 }).then(res => res.json()).then(data => {
                     console.log(data);
                   });
+                props.setUpdateDashboard(props.updateDashboard+1);
             }}>
                 <ListItemIcon>
                     <AssignmentIcon />
@@ -194,6 +183,17 @@ export default function MyDrawer(props){
 
     }
 
+    const delete_current_table = ()=>{
+      fetch("/delete_current_table", {
+        method: "DELETE"
+      }).then(res=> res.json()).then(data => {
+        console.log(data);
+      }).catch(error=>{
+        console.error(error)
+      });
+    }
+
+    const [open, setOpen] = useState(false);
 
     return (
         <Drawer variant="permanent" open={props.open}>
@@ -214,18 +214,29 @@ export default function MyDrawer(props){
           <Divider />
           <ListSubheader inset>Tables</ListSubheader>
           <List>{savedTables}</List>
-          <ListSubheader inset>Upload new pcap</ListSubheader>
+          <ListSubheader inset>Operations</ListSubheader>
           <Button
               variant="contained"
               component="label"
             >
-              Upload File
+              Upload .pcap
               <input
                 type="file"
                 hidden
                 onChange={(ev)=>{console.log("triggered onSubmit from file upload. "); console.log(ev.target); add_pcap_from_input_event(ev)}}
               />
-            </Button>
+          </Button>
+          <Divider />
+          <Button
+              variant="contained"
+              component="label"
+              onClick={delete_current_table}
+            >
+              Delete table
+          </Button>
+          
+          <SimpleDialog updateDashboard={props.updateDashboard} setUpdateDashboard={props.setUpdateDashboard}/>
+
         </Drawer>
     )
 }

@@ -30,7 +30,7 @@ const data01 = [
     }
   ];
 
-export default function PieChartComponent() {
+export default function PieChartComponent(props) {
   const theme = useTheme();
   const [transportLayerDist, setTransportLayerDist] = useState([]);
   const [inetLayerDist, setInetLayerDist] = useState([]);
@@ -59,7 +59,8 @@ export default function PieChartComponent() {
       });
 
 
-  }, []);
+  }, [props.updateDashboard]);
+  
   return (
     <React.Fragment>
       <Title>Today</Title>

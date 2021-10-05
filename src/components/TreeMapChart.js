@@ -30,7 +30,7 @@ const data01 = [
     }
   ];
 
-export default function TreeMapComponent() {
+export default function TreeMapComponent(props) {
   const theme = useTheme();
   const [srcDist, setSrcDist] = useState([]);
   const [destDist, setDestDist] = useState([]);
@@ -57,9 +57,10 @@ export default function TreeMapComponent() {
         });
         setDestDist(name_value_pairs);
       });
+      
+  }, [props.updateDashboard]);
 
 
-  }, []);
   return (
     <React.Fragment>
       <Title>Source</Title>

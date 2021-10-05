@@ -13,7 +13,7 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
-export default function PacketTable() {
+export default function PacketTable(props) {
 
 
   const [currentPackets, setCurrentPackets] = useState([]);
@@ -25,7 +25,7 @@ export default function PacketTable() {
       console.log(data.packets)
       setCurrentPackets(newPackets);
     });
-  }, []);
+  }, [props.updateDashboard]);
 
 
   return (

@@ -8,7 +8,7 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
-export default function PacketsCount() {
+export default function PacketsCount(props) {
 
   const [packetCount, setPacketCount] = useState(0);
   const [tableName, setTableName] = useState("getting table name...");
@@ -25,7 +25,7 @@ export default function PacketsCount() {
     });
 
 
-  }, []);
+  }, [props.updateDashboard]);
 
 
   return (

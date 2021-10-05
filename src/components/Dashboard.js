@@ -23,13 +23,14 @@ import PieChartComponent from './PieChart';
 import TreeMapComponent from './TreeMapChart';
 import MyDrawer from './MyDrawer';
 import { Button } from '@mui/material';
+import { useState, useEffect } from 'react';
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+        Jacob Laframboise
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -66,6 +67,12 @@ function DashboardContent() {
     setOpen(!open);
   };
 
+  const [updateDashboard, setUpdateDashboard] = useState(0);
+
+  useEffect(() => {
+    console.log("Updating dashboard!")
+    }, [updateDashboard]);
+
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -94,6 +101,7 @@ function DashboardContent() {
               color="inherit"
               noWrap
               sx={{ flexGrow: 1 }}
+              onClick={e=>{setUpdateDashboard(updateDashboard+1)}}
             >
               Dashboard
             </Typography>
@@ -104,7 +112,7 @@ function DashboardContent() {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <MyDrawer toggleDrawer={toggleDrawer} open={open}></MyDrawer>
+        <MyDrawer toggleDrawer={toggleDrawer} open={open} updateDashboard={updateDashboard} setUpdateDashboard={setUpdateDashboard}></MyDrawer>
         <Box
           component="main"
           sx={{
@@ -130,7 +138,7 @@ function DashboardContent() {
                     height: 240,
                   }}
                 >
-                  <TreeMapComponent/>
+                  <TreeMapComponent updateDashboard={updateDashboard}/>
                 </Paper>
               </Grid>
               {/* PieChart */}
@@ -143,7 +151,7 @@ function DashboardContent() {
                     height: 240,
                   }}
                 >
-                  <PieChartComponent />
+                  <PieChartComponent updateDashboard={updateDashboard}/>
                 </Paper>
               </Grid>
               {/* Recent Deposits */}
@@ -156,13 +164,13 @@ function DashboardContent() {
                     height: 240,
                   }}
                 >
-                  <PacketsCount />
+                  <PacketsCount updateDashboard={updateDashboard}/>
                 </Paper>
               </Grid>
               {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
+                  <Orders updateDashboard={updateDashboard}/>
                 </Paper>
               </Grid>
             </Grid>

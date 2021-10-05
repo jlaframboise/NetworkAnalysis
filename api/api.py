@@ -200,6 +200,34 @@ def set_table():
     app.config['CURRENT_TABLE'] = santitize_table_name(new_table_name)
     return {'status':'table set I think. ', 'new_table_name':app.config['CURRENT_TABLE']}
 
+@app.route('/delete_current_table', methods=['DELETE'])
+def delete_current_table():
+    
+    sql_connection = sql.connect(app.config['SQL_DB'])
+    cursor=sql_connection.cursor()
+
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    table_names = cursor.fetchall()
+
+    table_names = [x[0] for x in table_names]
+    print(table_names)
+
+    if len(table_names)<2:
+        return {'status': 'can not delete table if no other tables exist'}
+    else:
+        cursor.execute("DROP TABLE " + app.config['CURRENT_TABLE'])
+        table_names = [x for x in table_names if x !=app.config['CURRENT_TABLE']]
+        app.config['CURRENT_TABLE'] = table_names[0]
+
+    print(table_names)
+    print(app.config['CURRENT_TABLE'])
+    
+    sql_connection.commit()
+    cursor.close()
+    sql_connection.close()
+    
+    return {'status':'Deleted table'}
+
 
 # upload a file
 @app.route('/upload', methods=['POST'])
