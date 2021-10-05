@@ -129,32 +129,6 @@ function DashboardContent() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/* Treemap for source ip*/}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <TreeMapComponent updateDashboard={updateDashboard}/>
-                </Paper>
-              </Grid>
-              {/* bar chart for location*/}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <MyBarChart updateDashboard={updateDashboard}/>
-                </Paper>
-              </Grid>
               {/* PieChart */}
               <Grid item xs={12} md={8} lg={9}>
                 <Paper
@@ -181,6 +155,33 @@ function DashboardContent() {
                   <PacketsCount updateDashboard={updateDashboard}/>
                 </Paper>
               </Grid>
+              {/* Treemap for source ip*/}
+              <Grid item xs={12}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 240,
+                  }}
+                >
+                  <TreeMapComponent updateDashboard={updateDashboard}/>
+                </Paper>
+              </Grid>
+              {/* bar chart for location*/}
+              <Grid item xs={12}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 240,
+                  }}
+                >
+                  <MyBarChart updateDashboard={updateDashboard}/>
+                </Paper>
+              </Grid>
+              
               {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
