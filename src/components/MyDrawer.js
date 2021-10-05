@@ -177,6 +177,7 @@ export default function MyDrawer(props){
         body: formData
       }).then(res=> res.json()).then(data => {
         console.log(data);
+        props.setUpdateDashboard(props.updateDashboard+1)
       }).catch(error=>{
         console.error(error)
       });
@@ -230,7 +231,7 @@ export default function MyDrawer(props){
           <Button
               variant="contained"
               component="label"
-              onClick={delete_current_table}
+              onClick={e=>{delete_current_table(); props.setUpdateDashboard(props.updateDashboard+1)}}
             >
               Delete table
           </Button>
