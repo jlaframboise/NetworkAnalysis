@@ -1,3 +1,24 @@
+# Network Analysis
+By Jacob Laframboise
+
+## Purpose
+The purpose of this work, is to be able to analyze and visualize network packets coming to and from your device with particular interest in location information. 
+
+## Components
+1. There is a scripts folder in /api/scripts where you can see the initial Python scripts that motivated the project. 
+2. There is a Python Flask backend api in the /api folder primarily in api.py
+3. There is a React.js frontend with Material UI in the root directory and in the /src directory. 
+
+## The frontend
+
+![Screenshot from 2021-10-05 23-30-26](https://user-images.githubusercontent.com/38571487/136136449-94766ed2-4be3-4719-925a-09f3df37fe88.png)
+
+## Google Earth import of the scripts output
+![Screenshot from 2021-10-05 23-33-15](https://user-images.githubusercontent.com/38571487/136136565-09f3d315-9789-466b-9bf5-380a29a77ace.png)
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
