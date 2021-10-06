@@ -1,7 +1,7 @@
 import sqlite3 as sql
 
 sql_connection = sql.connect('sql_db.db')
-cursor=sql_connection.cursor()
+cursor = sql_connection.cursor()
 print("Connected to db")
 
 cursor.execute("select sqlite_version()")
@@ -9,7 +9,7 @@ record = cursor.fetchall()
 print(f"The sql verison is: {record}")
 cursor.close()
 
-sql_create_table_query="""
+sql_create_table_query = """
 CREATE TABLE packets (
     id INTEGER PRIMARY KEY,
     iface_type TEXT NOT NULL,

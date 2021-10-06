@@ -15,8 +15,6 @@ from scapy.all import IP, rdpcap
 import geoip2.database
 
 
-
-
 def ip_to_kml(ip, reader):
     """
     A function to take in an ip address, and return 
@@ -43,6 +41,7 @@ def ip_to_kml(ip, reader):
     except:
         # the ip was not found in the database
         return None
+
 
 def ips_to_line_kml(ip1, ip2, reader):
     """
@@ -73,7 +72,7 @@ def ips_to_line_kml(ip1, ip2, reader):
         "</coordinates>\n"
         "</LineString>\n"
         "</Placemark>\n"
-    )%(ip1, ip2, long1, lat1, long2, lat2)
+    ) % (ip1, ip2, long1, lat1, long2, lat2)
 
     return kml
 
@@ -103,7 +102,7 @@ def packet_to_kml(packet, reader):
         dest_kml = ip_to_kml(dest_ip, reader)
     except:
         dest_kml = None
-    
+
     if src_kml is not None and dest_kml is not None:
         connect_kml = ips_to_line_kml(src_ip, dest_ip, reader)
         print("Added connection")
@@ -111,17 +110,17 @@ def packet_to_kml(packet, reader):
         connect_kml = None
 
     return src_kml, dest_kml, connect_kml
-    
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     print("Reading packets and generating kml...")
 
-    # setup geo database and read packets. 
+    # setup geo database and read packets.
     geoDataPath = '/home/jacob/Documents/GeoLite2-City_20210928/GeoLite2-City.mmdb'
     fname = "gov-websites-cap1.pcapng"
     packets = rdpcap(fname)
 
-    kmls=""
+    kmls = ""
     with geoip2.database.Reader(geoDataPath) as reader:
         for packet in packets:
             src_kml, dest_kml, connect_kml = packet_to_kml(packet, reader)
@@ -133,7 +132,7 @@ if __name__=='__main__':
                 kmls = kmls + connect_kml
 
     # add in extra kml lines to top and bottom of document
-    kml_header=(
+    kml_header = (
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
         "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
         "<Document>\n"
@@ -154,4 +153,3 @@ if __name__=='__main__':
     f.close()
 
     print("Complete. ")
-
