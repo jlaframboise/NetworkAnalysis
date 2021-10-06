@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
@@ -9,14 +9,16 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-import PersonIcon from '@mui/icons-material/Person';
 import AddIcon from '@mui/icons-material/Add';
-import Typography from '@mui/material/Typography';
-import { blue } from '@mui/material/colors';
 import { TextField } from '@mui/material';
 
 
-
+/**
+ * A functional component to send a simple dialog for 
+ * user input
+ * @param {*} props 
+ * @returns 
+ */
 function SimpleDialog(props) {
   const { onClose, newTableName, setNewTableName, open } = props;
 
@@ -29,7 +31,7 @@ function SimpleDialog(props) {
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>Create table</DialogTitle>
       <List sx={{ pt: 0 }}>
-        <TextField id="standard-basic" defaultValue="MyNewPacketTable" onChange={e=>{setNewTableName(e.target.value)}}></TextField>
+        <TextField id="standard-basic" defaultValue="MyNewPacketTable" onChange={e => { setNewTableName(e.target.value) }}></TextField>
         <ListItem autoFocus button onClick={() => handleClose(newTableName)}>
           <ListItemAvatar>
             <Avatar>
@@ -49,6 +51,15 @@ SimpleDialog.propTypes = {
   newTableName: PropTypes.string.isRequired,
 };
 
+
+/**
+ * A functional component which will create a button 
+ * which will use a SimpleDialog to allow the user
+ * to input the name of a new table they would like to add. 
+ * 
+ * @param {*} props 
+ * @returns 
+ */
 export default function AddTableButton(props) {
   const [open, setOpen] = useState(false);
   const [newTableName, setNewTableName] = React.useState("");
@@ -57,6 +68,8 @@ export default function AddTableButton(props) {
     setOpen(true);
   };
 
+  // when the form is submitted, send the request
+  // to add the table and then refresh components. 
   const handleClose = (value) => {
     setOpen(false);
     setNewTableName(value);
@@ -65,18 +78,19 @@ export default function AddTableButton(props) {
     fetch("/create_table", {
       method: "POST",
       body: formData
-    }).then(res=> res.json()).then(data => {
+    }).then(res => res.json()).then(data => {
       console.log(data);
-    }).catch(error=>{
+    }).catch(error => {
       console.error(error)
     });
 
     console.log("Updating the dashboard from closing the SimpleDialog")
-    props.setUpdateDashboard(props.updateDashboard+1);
+    props.setUpdateDashboard(props.updateDashboard + 1);
 
 
   };
 
+  // render the button and the SimpleDialog
   return (
     <div>
       <br />

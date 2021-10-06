@@ -25,7 +25,14 @@ import MyBarChart from './MyBarChart';
 import MyDrawer from './MyDrawer';
 import { Button } from '@mui/material';
 import { useState, useEffect } from 'react';
+import PacketTable from './PacketTable';
 
+
+
+/*
+A functional component to add a copyright 
+note onto the dashboard. 
+*/
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -41,6 +48,9 @@ function Copyright(props) {
 
 const drawerWidth = 240;
 
+/*
+A function to create the app bar at the top of the dashboard
+*/
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -59,21 +69,32 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-
+// Create our theme
 const mdTheme = createTheme();
 
+
+/*
+This functional component will be the core component of this
+dashboard. It will render all other components to the screen 
+and control state updates with the useEffect react hook. 
+*/
 function DashboardContent() {
+
+  // manage drawer state
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
+  // use useEffect and useState to trigger component data refreshes
   const [updateDashboard, setUpdateDashboard] = useState(0);
 
   useEffect(() => {
     console.log("Updating dashboard!")
     }, [updateDashboard]);
 
+
+  // return the content
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -142,7 +163,7 @@ function DashboardContent() {
                   <PieChartComponent updateDashboard={updateDashboard}/>
                 </Paper>
               </Grid>
-              {/* Recent Deposits */}
+              {/* Packet count component */}
               <Grid item xs={12} md={4} lg={3}>
                 <Paper
                   sx={{
@@ -181,11 +202,10 @@ function DashboardContent() {
                   <MyBarChart updateDashboard={updateDashboard}/>
                 </Paper>
               </Grid>
-              
-              {/* Recent Orders */}
+              {/* Packet table component */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders updateDashboard={updateDashboard}/>
+                  <PacketTable updateDashboard={updateDashboard}/>
                 </Paper>
               </Grid>
             </Grid>

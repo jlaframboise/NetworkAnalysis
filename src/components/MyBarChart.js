@@ -4,12 +4,17 @@ import { BarChart, Pie, Line, XAxis, YAxis, Label, ResponsiveContainer, Cartesia
 import Title from './Title';
 import { useState, useEffect } from 'react';
 
-
+/*
+A functional component that will create a rechart.BarChart to
+show the top countries that we are communicating with. 
+*/
 export default function MyBarChart(props) {
   const theme = useTheme();
   const [countryDist, setCountryDist] = useState([]);
   const [destDist, setDestDist] = useState([]);
 
+
+  // fetch the value counts for each countries
   useEffect(() => {
     fetch('/country_freqs').then(res => res.json()).then(data => {
       const name_value_pairs = []

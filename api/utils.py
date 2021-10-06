@@ -1,9 +1,33 @@
+"""
+This file will contain useful helper functions to support
+api.py in serving requests from the frontend. 
+
+Namely, it will contain a function to parse packets
+from a .pcap file or from a scapy.sniff call, and
+it will contain a function to sanitize a table name
+parameter to avoid sql injection. 
+
+"""
+
 import scapy.all as scapy
 
 def santitize_table_name(table_name_input):
+    """
+    Apply a whitelist of allowed characters in sql table names. 
+    """
     return ''.join( chr for chr in table_name_input if chr.isalnum() or chr=="_" )
 
 def parse_packets(packets, geo_reader=None):
+    """
+    Take in a list of scapy packets, and parse key information
+    from the packet. For this project, the focus is on IPv4 packets. 
+
+    Additionally, it will take the source and destination IP
+    addresses and attempt to get location information from 
+    a GeoIP2 database. 
+    This occurs if an instance of a geoip2 reader is provided
+    as a keyword argument. 
+    """
     data_for_db = []
     for i in range(len(packets)):
         # print(f"{i}", end='\t')

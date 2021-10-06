@@ -27,7 +27,7 @@ from utils import *
 # configure flask
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 1024*1024*30
-app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif', '.txt', '.pcap']
+app.config['UPLOAD_EXTENSIONS'] = ['.pcap']
 app.config['UPLOAD_PATH'] = 'uploads'
 app.config['SQL_DB'] = 'database/sql_db.db'
 app.config['GEO_DB_CITY'] = 'database/GeoLite2-City_20210928/GeoLite2-City.mmdb'
