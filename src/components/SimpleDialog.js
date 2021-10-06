@@ -79,9 +79,6 @@ export default function AddTableButton(props) {
 
   return (
     <div>
-      <Typography variant="subtitle1" component="div">
-        Selected: {newTableName}
-      </Typography>
       <br />
       <Button variant="contained" onClick={handleClickOpen}>
         Add Table

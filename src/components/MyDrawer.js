@@ -184,6 +184,18 @@ export default function MyDrawer(props){
 
     }
 
+    const sniff_packets_from_input_event = (e) => {
+
+      fetch("/sniff",{method:'POST'}).then(res=> res.json()).then(data => {
+        console.log(data);
+        console.log("updating dashboard after sniff")
+        props.setUpdateDashboard(props.updateDashboard+1)
+      }).catch(error=>{
+        console.error(error)
+      });
+
+    }
+
     const delete_current_table = ()=>{
       fetch("/delete_current_table", {
         method: "DELETE"
@@ -210,9 +222,9 @@ export default function MyDrawer(props){
               <ChevronLeftIcon />
             </IconButton>
           </Toolbar>
-          <Divider />
+          {/* <Divider />
           <List>{mainListItems}</List>
-          <Divider />
+          <Divider /> */}
           <ListSubheader inset>Tables</ListSubheader>
           <List>{savedTables}</List>
           <ListSubheader inset>Operations</ListSubheader>
@@ -234,6 +246,14 @@ export default function MyDrawer(props){
               onClick={e=>{delete_current_table(); props.setUpdateDashboard(props.updateDashboard+1)}}
             >
               Delete table
+          </Button>
+          <Divider />
+          <Button
+              variant="contained"
+              component="label"
+              onClick={e=>{sniff_packets_from_input_event(e);}}
+            >
+              Sniff Packets
           </Button>
           
           <SimpleDialog updateDashboard={props.updateDashboard} setUpdateDashboard={props.setUpdateDashboard}/>

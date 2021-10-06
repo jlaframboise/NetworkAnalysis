@@ -7,14 +7,57 @@ from werkzeug.utils import secure_filename
 
 from utils import *
 
-
+# configure flask
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 1024*1024*30
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif', '.txt', '.pcap']
 app.config['UPLOAD_PATH'] = 'uploads'
 app.config['SQL_DB'] = 'database/sql_db.db'
 app.config['GEO_DB_CITY'] = 'database/GeoLite2-City_20210928/GeoLite2-City.mmdb'
-app.config['CURRENT_TABLE'] = 'ikea'
+
+
+# ensure that there is at least one table in the database
+# if there is not, create one
+# set the current table correctly
+sql_connection = sql.connect(app.config['SQL_DB'])
+cursor=sql_connection.cursor()
+cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+initial_table_names = [x[0] for x in cursor.fetchall()]
+cursor.close()
+sql_connection.close()
+if not len(initial_table_names) >= 1:
+    # create a default table
+    table_name =  "first_table"
+    sql_connection = sql.connect(app.config['SQL_DB'])
+    cursor = sql_connection.cursor()
+    cursor.execute("""
+    CREATE TABLE """ + santitize_table_name(table_name) + """ (
+        id INTEGER PRIMARY KEY,
+        inet_layer TEXT NOT NULL,
+        transport_layer TEXT NOT NULL,
+        src TEXT NOT NULL,
+        dest TEXT NOT NULL,
+        src_country TEXT,
+        src_city TEXT, 
+        src_lat FLOAT,
+        src_long FLOAT,
+        dest_country TEXT,
+        dest_city TEXT,
+        dest_lat FLOAT,
+        dest_long FLOAT
+    )
+    """)
+    sql_connection.commit()
+    cursor.close()
+    sql_connection.close()
+
+    app.config['CURRENT_TABLE'] = table_name
+else:
+    app.config['CURRENT_TABLE'] = initial_table_names[0]
+
+
+
+
 
 @app.route('/time')
 def get_current_time():
@@ -130,11 +173,6 @@ def get_country_freqs():
     cursor.close()
     sql_connection.close()
     return {"dist": record}
-
-
-
-
-
 
 
 # test that the sql is accessible
@@ -301,34 +339,27 @@ def upload_pcap():
 
 # sniff packets at the server if allowed
 # return results
-@app.route('/sniff', methods=['GET'])
+@app.route('/sniff', methods=['GET', 'POST'])
 def sniff():
     try:
-        packets = scapy.sniff(count=10, iface="enp39s0", filter="ip")
+        packets = scapy.sniff(count=10, iface="enp39s0", filter="ip", timeout=10)
     except PermissionError:
         return {"status":"The server does not have privilege to sniff packets. \
         Run the server as sudo or psudo only if running locally. "}
 
-    data_for_db = []
-    for i in range(len(packets)):
-        # print(f"{i}", end='\t')
-        packet = packets[i]
-        layers = packet.layers()
-        try:
-            ip_packet = packet[scapy.IP]
-            src = ip_packet.src
-            dest = ip_packet.dst
-            next_layer = ip_packet.payload
-            transport_layer_type = str(type(next_layer))
-            if "TCP" in transport_layer_type:
-                transport_layer_type = "TCP"
-            elif "UDP" in transport_layer_type:
-                transport_layer_type = "UDP"
-            values = ("IP", transport_layer_type, str(src), str(dest))
-            data_for_db.append(values)
+    # parse packets
+    with geoip2.database.Reader(app.config['GEO_DB_CITY']) as reader:
+        parsed_packets = parse_packets(packets, geo_reader=reader)
 
-        except IndexError:
-            print("skipped packet with no IP layer")
-    return {"packet_values":data_for_db}
+    # save to db
+    sql_connection = sql.connect(app.config['SQL_DB'])
+    cursor = sql_connection.cursor()
+    cursor.executemany("""INSERT INTO """+ app.config['CURRENT_TABLE'] + """ (inet_layer, transport_layer, src, dest, src_country, src_city, src_lat, src_long, dest_country, dest_city, dest_lat, dest_long)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", parsed_packets)
+    sql_connection.commit()
+    cursor.close()
+    sql_connection.close()
+
+    return {"status": f"Succeeded in sniffing and adding {len(parsed_packets)} packets. "}
 
 
