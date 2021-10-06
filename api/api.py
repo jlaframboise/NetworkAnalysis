@@ -75,6 +75,7 @@ def init_db():
     else:
         app.config['CURRENT_TABLE'] = initial_table_names[0]
 
+
 init_db()
 
 
@@ -394,7 +395,6 @@ def delete_current_table():
                        app.config['CURRENT_TABLE']]
         app.config['CURRENT_TABLE'] = table_names[0]
 
-
     sql_connection.commit()
     cursor.close()
     sql_connection.close()
@@ -406,6 +406,7 @@ def delete_current_table():
 run_tests = True
 
 ######## GET tests ##############################
+
 
 def test_sql_version():
     print("Testing sql version")
@@ -430,6 +431,7 @@ def test_get_packets():
             print("Failed test")
             return False
 
+
 def test_get_packet_count():
     print("Testing get_packet_count")
     with app.test_client() as tc:
@@ -440,6 +442,7 @@ def test_get_packet_count():
         except:
             print("Failed test")
             return False
+
 
 def test_get_transport_layer_freqs():
     print("Testing transport_layer_freqs")
@@ -452,6 +455,7 @@ def test_get_transport_layer_freqs():
             print("Failed test")
             return False
 
+
 def test_get_inet_layer_freqs():
     print("Testing inet_layer_freqs")
     with app.test_client() as tc:
@@ -462,6 +466,7 @@ def test_get_inet_layer_freqs():
         except:
             print("Failed test")
             return False
+
 
 def test_get_src_freqs():
     print("Testing get_src_freqs")
@@ -474,6 +479,7 @@ def test_get_src_freqs():
             print("Failed test")
             return False
 
+
 def test_get_dest_freqs():
     print("Testing get_dest_freqs")
     with app.test_client() as tc:
@@ -484,6 +490,7 @@ def test_get_dest_freqs():
         except:
             print("Failed test")
             return False
+
 
 def test_get_country_freqs():
     print("Testing get_country_freqs")
@@ -496,6 +503,7 @@ def test_get_country_freqs():
             print("Failed test")
             return False
 
+
 def test_get_table_names():
     print("Testing get_table_names")
     with app.test_client() as tc:
@@ -506,6 +514,7 @@ def test_get_table_names():
         except:
             print("Failed test")
             return False
+
 
 def test_get_current_table_name():
     print("Testing get_current_table_name")
@@ -528,7 +537,7 @@ def test_create_table():
             res = tc.post("/create_table", data={
                 'table_name': 'test_table_1'
             }).get_json()
-            assert res is not None and res['status']=="table created"
+            assert res is not None and res['status'] == "table created"
             return True
         except:
             print("Failed test")
@@ -542,23 +551,23 @@ def test_set_table():
             res = tc.post("/set_current_table", data={
                 'table_name': 'test_table_1'
             }).get_json()
-            assert res is not None and res['status']=="table set"
+            assert res is not None and res['status'] == "table set"
             return True
         except:
             print("Failed test")
             return False
+
 
 def test_delete_current_table():
     print("Testing delete_current_table")
     with app.test_client() as tc:
         try:
             res = tc.delete("/delete_current_table").get_json()
-            assert res is not None and res['status']=="Deleted table"
+            assert res is not None and res['status'] == "Deleted table"
             return True
         except:
             print("Failed test")
             return False
-
 
 
 if run_tests:
@@ -583,10 +592,9 @@ if run_tests:
         t_result = f()
         test_results.append(t_result)
         print(t_result)
-    
+
     print(f"Passed {sum(test_results)} / {len(test_results)} tests. ")
     print("Failed tests: ")
     for i in range(len(test_results)):
         if not test_results[i]:
             print(test_functions[i])
-

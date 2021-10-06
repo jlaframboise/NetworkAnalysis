@@ -11,11 +11,13 @@ parameter to avoid sql injection.
 
 import scapy.all as scapy
 
+
 def santitize_table_name(table_name_input):
     """
     Apply a whitelist of allowed characters in sql table names. 
     """
-    return ''.join( chr for chr in table_name_input if chr.isalnum() or chr=="_" )
+    return ''.join(chr for chr in table_name_input if chr.isalnum() or chr == "_")
+
 
 def parse_packets(packets, geo_reader=None):
     """
@@ -46,24 +48,25 @@ def parse_packets(packets, geo_reader=None):
 
             if geo_reader is not None:
                 try:
-                    response=geo_reader.city(src)
-                    src_city=response.city.name
-                    src_country=response.country.name
+                    response = geo_reader.city(src)
+                    src_city = response.city.name
+                    src_country = response.country.name
                     src_long = response.location.longitude
                     src_lat = response.location.latitude
                 except:
                     # the ip was not found in the database
-                    src_city=src_country=src_long=src_lat=None
+                    src_city = src_country = src_long = src_lat = None
                 try:
-                    response=geo_reader.city(dest)
-                    dest_city=response.city.name
-                    dest_country=response.country.name
+                    response = geo_reader.city(dest)
+                    dest_city = response.city.name
+                    dest_country = response.country.name
                     dest_long = response.location.longitude
                     dest_lat = response.location.latitude
                 except:
                     # the ip was not found in the database
-                    dest_city=dest_country=dest_long = dest_lat = None
-                values = ("IP", transport_layer_type, str(src), str(dest), src_country, src_city, src_lat, src_long, dest_country, dest_city, dest_lat, dest_long)
+                    dest_city = dest_country = dest_long = dest_lat = None
+                values = ("IP", transport_layer_type, str(src), str(dest), src_country,
+                          src_city, src_lat, src_long, dest_country, dest_city, dest_lat, dest_long)
             else:
                 values = ("IP", transport_layer_type, str(src), str(dest))
             data_for_db.append(values)

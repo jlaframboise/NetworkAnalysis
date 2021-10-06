@@ -91,7 +91,7 @@ function DashboardContent() {
 
   useEffect(() => {
     console.log("Updating dashboard!")
-    }, [updateDashboard]);
+  }, [updateDashboard]);
 
 
   // return the content
@@ -123,7 +123,7 @@ function DashboardContent() {
               color="inherit"
               noWrap
               sx={{ flexGrow: 1 }}
-              onClick={e=>{setUpdateDashboard(updateDashboard+1)}}
+              onClick={e => { setUpdateDashboard(updateDashboard + 1) }}
             >
               Dashboard
             </Typography>
@@ -160,7 +160,7 @@ function DashboardContent() {
                     height: 240,
                   }}
                 >
-                  <PieChartComponent updateDashboard={updateDashboard}/>
+                  <PieChartComponent updateDashboard={updateDashboard} />
                 </Paper>
               </Grid>
               {/* Packet count component */}
@@ -173,7 +173,7 @@ function DashboardContent() {
                     height: 240,
                   }}
                 >
-                  <PacketsCount updateDashboard={updateDashboard}/>
+                  <PacketsCount updateDashboard={updateDashboard} />
                 </Paper>
               </Grid>
               {/* Treemap for source ip*/}
@@ -186,7 +186,7 @@ function DashboardContent() {
                     height: 240,
                   }}
                 >
-                  <TreeMapComponent updateDashboard={updateDashboard}/>
+                  <TreeMapComponent updateDashboard={updateDashboard} />
                 </Paper>
               </Grid>
               {/* bar chart for location*/}
@@ -199,13 +199,13 @@ function DashboardContent() {
                     height: 240,
                   }}
                 >
-                  <MyBarChart updateDashboard={updateDashboard}/>
+                  <MyBarChart updateDashboard={updateDashboard} />
                 </Paper>
               </Grid>
               {/* Packet table component */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <PacketTable updateDashboard={updateDashboard}/>
+                  <PacketTable updateDashboard={updateDashboard} />
                 </Paper>
               </Grid>
             </Grid>

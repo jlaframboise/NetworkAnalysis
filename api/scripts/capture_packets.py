@@ -1,3 +1,4 @@
+import sqlite3 as sql
 from scapy import data
 import scapy.all as scapy
 import sys
@@ -30,20 +31,17 @@ for i in range(len(packets)):
 
     except IndexError:
         print("skipped packet with no IP layer")
-    
-
 
 
 print(data_for_db)
 
-import sqlite3 as sql
 
 sql_connection = sql.connect('sql_db.db')
-cursor=sql_connection.cursor()
+cursor = sql_connection.cursor()
 print("Connected to db")
 
 
-sql_create_table_query="""
+sql_create_table_query = """
 CREATE TABLE ip_packets (
     id INTEGER PRIMARY KEY,
     inet_layer TEXT NOT NULL,
